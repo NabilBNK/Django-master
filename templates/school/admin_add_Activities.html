@@ -1,0 +1,100 @@
+{% extends 'school/adminbase.html' %}
+
+{% load widget_tweaks %}
+
+
+
+
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+       background: -webkit-linear-gradient(left, #343a40, #607d8b);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #4caf50;
+      color: #fff;
+    }
+  </style>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+
+<form method="post">
+  {% csrf_token %}
+  <div class="container register-form">
+    <div class="form">
+      <div class="note">
+        <p>Hire New Activity To University</p>
+      </div>
+
+      <div class="form-content">
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          There is already an activity registered here !!!
+        </div>
+    {% else %}
+        {% if form.is_valid %}
+            <div class="alert alert-success">
+                Form submitted successfully!
+            </div>
+        {% endif %}
+    {% endif %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    Name group:{% render_field form.group class="form-control" placeholder="group" %}
+                </div>
+                <div class="form-group">
+                    Name Teacher:{% render_field form.teacher class="form-control" placeholder="Teacher" %}
+                </div>
+                <div class="form-group">
+                    Module:{% render_field form.module class="form-control" placeholder="module" %}
+                </div>
+                <div class="form-group">
+                    Duree:{% render_field form.duration class="form-control" placeholder="Duration" %}
+                </div>
+                <div class="form-group">
+                    Class:{% render_field form.classroom class="form-control" placeholder="Classroom" %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btnSubmit">Add</button>
+    </div>
+    
+
+</form>
+
+
+{% endblock content %}

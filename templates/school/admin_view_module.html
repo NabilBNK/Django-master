@@ -1,0 +1,119 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .table-container {
+      margin: 100px auto; /* Center the table horizontally */
+      max-width: 800px; /* Set a maximum width for the table */
+      overflow-x: auto; /* Add horizontal scroll if necessary */
+    }
+  </style>
+
+  <script>
+    $(document).ready(function() {
+      // Function to filter the table based on the selected level and codeM
+      function filterTable(level, codeM) {
+        $('table tbody tr').each(function() {
+          var moduleLevel = $(this).find('td:nth-child(3)').text();
+          var moduleCodeM = $(this).find('td:nth-child(2)').text();
+          var showRow = (level === 'all' || moduleLevel === level) && (codeM === 'all' || moduleCodeM === codeM);
+          $(this).toggle(showRow);
+        });
+      }
+
+      // Event handler for level selection change
+      $('#level-select').change(function() {
+        var selectedLevel = $(this).val();
+        var selectedCodeM = $('#codeM-select').val();
+        filterTable(selectedLevel, selectedCodeM);
+      });
+
+      // Event handler for codeM selection change
+      $('#codeM-select').change(function() {
+        var selectedCodeM = $(this).val();
+        var selectedLevel = $('#level-select').val();
+        filterTable(selectedLevel, selectedCodeM);
+      });
+
+      // Show all rows initially
+      filterTable('all', 'all');
+    });
+  </script>
+  
+  
+</head>
+<br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">Module</h6>
+        </div>
+
+        <div class="table-container">
+          <div class="form-group">
+            <label for="level-select">Filter by Level:</label>
+            <select class="form-control" id="level-select">
+              <option value="all">All Levels</option>
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="codeM-select">Filter by Code Module:</label>
+            <select class="form-control" id="codeM-select">
+              <option value="all">All Code Modules</option>
+              <option value="TD">TD</option>
+              <option value="TP">TP</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+
+          <table class="table table-responsive table-hover table-striped table-bordered" id="dev-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code Module</th>
+                <th>Level</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in module %}
+              <tr>
+                <td>{{ m.name }}</td>
+                <td>{{ m.codeM }}</td>
+                <td>{{ m.level }}</td>
+                <td>
+                  <a class="btn btn-primary btn-xs" href="{% url 'update-module' m.id %}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </a>
+                  <a class="btn btn-danger btn-xs" href="{% url 'delete-module-from-University' m.id %}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

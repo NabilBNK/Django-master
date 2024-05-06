@@ -1,0 +1,136 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .table-container {
+      margin: 100px auto; /* Center the table horizontally */
+      max-width: 800px; /* Set a maximum width for the table */
+      overflow-x: auto; /* Add horizontal scroll if necessary */
+      overflow-y: auto; /* Add horizontal scroll if necessary */
+    }
+
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#group-select').change(function() {
+        var selectedGroup = $(this).val();
+        $('.group-row').hide();
+        if (selectedGroup === 'all') {
+          $('.group-row').show();
+        } else {
+          $('.group-row[data-group="' + selectedGroup + '"]').show();
+        }
+      });
+  
+      $('#teacher-select, #day-select').change(function() {
+        var selectedTeacher = $('#teacher-select').val();
+        var selectedDay = $('#day-select').val();
+        $('.teacher-row').hide();
+  
+        if (selectedTeacher === 'all' && selectedDay === 'all') {
+          $('.teacher-row').show();
+        } else if (selectedTeacher === 'all') {
+          $('.teacher-row[data-day="' + selectedDay + '"]').show();
+        } else if (selectedDay === 'all') {
+          $('.teacher-row[data-teacher="' + selectedTeacher + '"]').show();
+        } else {
+          $('.teacher-row[data-teacher="' + selectedTeacher + '"][data-day="' + selectedDay + '"]').show();
+        }
+      });
+    });
+  </script>
+  
+</head>
+<br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">Activities</h6>
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="filter-label" for="group-select">Filter by Group:</label>
+            <select class="form-control" id="group-select">
+              <option value="all">All Groups</option>
+              {% for group in groups %}
+              <option value="{{ group.name }}">{{ group.name }} ({{ group.level }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="filter-label" for="teacher-select">Filter by Teacher:</label>
+            <select class="form-control" id="teacher-select">
+              <option value="all">All Teachers</option>
+              {% for teacher in teachers %}
+                {% if teacher.activities_set.exists %}  <!-- Check if the teacher has associated activities -->
+                  <option value="{{ teacher.id }}">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="filter-label" for="day-select">Filter by Day:</label>
+            <select class="form-control" id="day-select">
+              <option value="all">All Days</option>
+              {% for duration in durations %}
+              <option value="{{ duration.name }}">{{ duration.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <table class="table table-responsive table-hover table-striped table-bordered" id="dev-table">
+          <thead>
+            <tr>
+              <th>Name module</th>
+              <th>Duration</th>
+              <th>Name Teacher</th>
+              <th>Group</th>
+              <th>classroom</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for activity in activities %}
+              <tr class="group-row teacher-row" data-group="{{ activity.group }}" data-teacher="{{ activity.teacher.id }}" data-day="{{ activity.duration.name }}">
+                <td>{{ activity.module.name }} ({{ activity.module.codeM }})</td>
+                <td>{{ activity.duration }}</td>
+                <td>{{ activity.teacher.user.first_name }} {{ activity.teacher.user.last_name }}</td>
+                <td>{{ activity.group.name }} ({{ activity.group.level }})</td>
+                <td>{{ activity.classroom }}</td>
+                <td>
+                  <a class="btn btn-primary btn-xs" href="{% url 'update-Activities' activity.id %}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </a>
+                  <a class="btn btn-danger btn-xs" href="{% url 'delete-Activities-from-University' activity.id %}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

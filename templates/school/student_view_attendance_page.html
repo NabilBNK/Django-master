@@ -1,0 +1,68 @@
+{% extends 'school/studentbase.html' %}
+{% block content %}
+
+<head>
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .table-container {
+      margin: 100px auto;
+      max-width: 800px;
+      overflow-x: auto;
+    }
+  </style>
+
+
+</head>
+<br><br><br><br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">{{ student.user.get_full_name }}'s Attendance of date {{date}}</h6>
+      </div>
+      <table class="table table-hover table-striped table-bordered" id="dev-table">
+        <thead>
+          <tr>
+            <th>Student Group</th>
+            <th>Module</th>
+            <th>Duration</th>
+            <th>Present/Absent</th>
+          </tr>
+        </thead>
+        {% if attendance_data %}
+  {% for attendance in attendance_data %}
+    <tr>
+      <td>{{ attendance.cl }} ({{ attendance.activity.group.level }})</td>
+      <td>{{ attendance.activity.module }} ({{ attendance.activity.module.codeM }})</td>
+      <td>{{ attendance.activity.duration.name}} ({{ attendance.activity.duration.start_time}}-{{ attendance.activity.duration.end_time}})</td>
+      <td>{{ attendance.present_status }}</td>
+    </tr>
+  {% endfor %}
+{% else %}
+  <tr>
+    <td colspan="4">No attendance found for the selected date</td>
+  </tr>
+{% endif %}
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+{% endblock content %}

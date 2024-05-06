@@ -1,0 +1,97 @@
+{% extends 'school/teacherbase.html' %}
+
+{% block content %}
+<br><br>
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .table-container {
+      margin: 100px auto; /* Center the table horizontally */
+      max-width: 800px; /* Set a maximum width for the table */
+      overflow-x: auto; /* Add horizontal scroll if necessary */
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#group-select, #module-select').change(function() {
+        var selectedGroup = $('#group-select').val();
+        var selectedModule = $('#module-select').val();
+
+        $('.activity-row').hide();
+
+        if (selectedGroup === 'all' && selectedModule === 'all') {
+          $('.activity-row').show();
+        } else if (selectedGroup === 'all') {
+          $('.activity-row[data-module="' + selectedModule + '"]').show();
+        } else if (selectedModule === 'all') {
+          $('.activity-row[data-group="' + selectedGroup + '"]').show();
+        } else {
+          $('.activity-row[data-group="' + selectedGroup + '"][data-module="' + selectedModule + '"]').show();
+        }
+      });
+    });
+  </script>
+</head>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">Activity</h6>
+        </div>
+        <div class="form-group">
+          <label for="group-select">Filter by Group:</label>
+          <select class="form-control" id="group-select">
+            <option value="all">All Groups</option>
+            {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.name }} ({{ group.level }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="module-select">Filter by Module:</label>
+          <select class="form-control" id="module-select">
+              <option value="all">All Modules</option>
+              {% for module in modules %}
+                  <option value="{{ module }}">{{ module }}</option>
+              {% endfor %}
+          </select>
+      </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover table-striped table-bordered" id="dev-table">
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Group</th>
+                <th>Duration</th>
+                <th>Classroom</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for activity in activities %}
+              <tr class="activity-row" data-group="{{ activity.group.id }}" data-module="{{ activity.module.name }}">
+                <td>{{ activity.module.name }} ({{ activity.module.codeM }})</td>
+                <td>{{ activity.group.name }} ({{ activity.group.level }})</td>
+                <td>{{ activity.duration }}</td>
+                <td>{{ activity.classroom }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

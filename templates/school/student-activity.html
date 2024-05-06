@@ -1,0 +1,115 @@
+{% extends 'school/studentbase.html' %}
+
+{% block content %}
+<br><br>
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .table-container {
+      margin: 100px auto; /* Center the table horizontally */
+      max-width: 800px; /* Set a maximum width for the table */
+      overflow-x: auto; /* Add horizontal scroll if necessary */
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#teacher-select, #module-select, #day-select').change(function() {
+            var selectedTeacher = $('#teacher-select').val();
+            var selectedModule = $('#module-select').val();
+            var selectedDay = $('#day-select').val();
+    
+            $('.activity-row').hide();
+    
+            $('.activity-row').filter(function() {
+                var teacherMatch = selectedTeacher === 'all' || $(this).data('teacher') === selectedTeacher;
+                var moduleMatch = selectedModule === 'all' || $(this).data('module') === selectedModule;
+                var dayMatch = selectedDay === 'all' || $(this).data('day') === selectedDay;
+    
+                return teacherMatch && moduleMatch && dayMatch;
+            }).show();
+        });
+    });
+    </script>
+    
+
+  
+</head>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">Activity</h6>
+        </div>
+
+         <div class="table-container">
+          <div class="form-group">
+            <label for="teacher-select">Filter by Teacher:</label>
+            <select class="form-control" id="teacher-select">
+              <option value="all">All Teachers</option>
+              {% for teacher in teachers %}
+                <option value="{{ teacher }}">{{ teacher }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+
+          <div class="form-group">
+            <label for="module-select">Filter by Module:</label>
+            <select class="form-control" id="module-select">
+                <option value="all">All Modules</option>
+                {% for module in modules %}
+                    <option value="{{ module }}">{{ module }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+          <div class="form-group">
+            <label class="filter-label" for="day-select">Filter by Day:</label>
+            <select class="form-control" id="day-select">
+              <option value="all">All Days</option>
+              {% for duration in durations %}
+              <option value="{{ duration.name }}">{{ duration.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <table class="table table-hover table-striped table-bordered" id="dev-table">
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Duration</th>
+                <th>Teacher</th>
+                <th>Classroom</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for activity in activities %}
+              <tr class="activity-row" data-teacher="{{ activity.teacher }}" data-module="{{ activity.module }}" data-day="{{ activity.duration.name }}">
+                <td>{{ activity.module }} ({{ activity.module.codeM }})</td>
+                <td>{{ activity.duration }}</td>
+                <td>{{ activity.teacher }}</td>
+                <td>{{ activity.classroom }}</td>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

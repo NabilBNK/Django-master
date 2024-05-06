@@ -1,0 +1,65 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .table-container {
+      margin: 100px auto; /* Center the table horizontally */
+      max-width: 800px; /* Set a maximum width for the table */
+      overflow-x: auto; /* Add horizontal scroll if necessary */
+    }
+  </style>
+
+</head>
+<br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">Days</h6>
+        </div>
+
+        <div class="table-container">
+          <table class="table table-responsive table-hover table-striped table-bordered" id="dev-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for day in days %}
+    <tr>
+        <td>{{ day.name }}</td>
+        <td>
+            <a class="btn btn-primary btn-xs" href="{% url 'update-days' day.id %}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+            <a class="btn btn-danger btn-xs" href="{% url 'delete-days-from-University' day.id %}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+    </tr>
+{% endfor %}
+
+            </tbody>
+            
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
